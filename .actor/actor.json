@@ -1,0 +1,12 @@
+{
+	"actorSpecification": 1,
+	"name": "glass-photo-scraper",
+	"title": "Glass Photo Scraper",
+	"description": "Scrapes photo information from Glass.photo pages",
+	"version": "0.0",
+	"meta": {
+		"templateId": "ts-crawlee-cheerio"
+	},
+	"input": "./input_schema.json",
+	"dockerfile": "./Dockerfile"
+}

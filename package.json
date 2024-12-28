@@ -1,0 +1,33 @@
+{
+	"name": "glass-photo-scraper",
+	"version": "0.0.1",
+	"type": "module",
+	"description": "This is a boilerplate of an Apify actor.",
+	"engines": {
+		"node": ">=18.0.0"
+	},
+	"dependencies": {
+		"@apify/eslint-config-ts": "^0.4.1",
+		"@apify/tsconfig": "^0.1.0",
+		"@typescript-eslint/eslint-plugin": "^8.18.2",
+		"@typescript-eslint/parser": "^8.18.2",
+		"apify": "^3.2.6",
+		"crawlee": "^3.12.1",
+		"dotenv": "^16.4.7",
+		"eslint": "^9.17.0",
+		"node-fetch": "^3.3.2",
+		"tsx": "^4.19.2",
+		"typescript": "^5.7.2"
+	},
+	"scripts": {
+		"start": "npm run start:dev",
+		"start:prod": "node dist/main.js",
+		"start:dev": "tsx src/main.ts",
+		"build": "tsc",
+		"lint": "eslint ./src --ext .ts",
+		"lint:fix": "eslint ./src --ext .ts --fix",
+		"test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1"
+	},
+	"author": "It's not you it's me",
+	"license": "ISC"
+}
