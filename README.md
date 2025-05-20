@@ -1,74 +1,100 @@
-## TypeScript Crawlee & CheerioCrawler template
+# Glass to Tana Scraper
 
-A template example built with [Crawlee](https://crawlee.dev/) to scrape data from a website using [Cheerio](https://cheerio.js.org/) wrapped into [CheerioCrawler](https://crawlee.dev/api/cheerio-crawler/class/CheerioCrawler).
+A specialized scraper built to extract photo metadata from Glass.photo and import it into Tana workspace using Tana's API.
 
-## Included features
+## Features
 
-- **[Apify SDK](https://docs.apify.com/sdk/js)** - toolkit for building [Actors](https://apify.com/actors)
-- **[Crawlee](https://crawlee.dev/)** - web scraping and browser automation library
-- **[Input schema](https://docs.apify.com/platform/actors/development/input-schema)** - define and easily validate a schema for your Actor's input
-- **[Dataset](https://docs.apify.com/sdk/python/docs/concepts/storages#working-with-datasets)** - store structured data where each object stored has the same attributes
-- **[Cheerio](https://cheerio.js.org/)** - a fast, flexible & elegant library for parsing and manipulating HTML and XML
+- Extracts detailed photo metadata from Glass.photo pages
+- Creates structured nodes in Tana with comprehensive photo information
+- Saves high-resolution images locally for backup purposes
+- Maintains proper error handling and logging
+- Uses environment variables for secure API token management
 
-## How it works
+## Technical Details
 
-This code is a TypeScript script that uses [Crawlee CheerioCrawler](https://crawlee.dev/api/cheerio-crawler/class/CheerioCrawler) framework to crawl a website and extract the data from the crawled URLs with Cheerio. It then stores the website titles in a dataset.
+This application is built with:
 
-- The crawler starts with URLs provided from the input `startUrls` field defined by the input schema. Number of scraped pages is limited by `maxPagesPerCrawl` field from input schema.
-- The crawler uses `requestHandler` for each URL to extract the data from the page with the Cheerio library and to save the title and URL of each page to the dataset. It also logs out each result that is being saved.
+- **TypeScript** - Type-safe JavaScript for robust code
+- **Node.js** - JavaScript runtime environment
+- **Crawlee/CheerioCrawler** - Library for web scraping and data extraction
+- **Apify SDK** - Provides actor framework and utilities
+- **Tana API Integration** - Sends structured data to Tana workspace
 
-## Resources
+## Extracted Photo Information
 
-- [Video tutorial](https://www.youtube.com/watch?v=yTRHomGg9uQ) on building a scraper using CheerioCrawler
-- [Written tutorial](https://docs.apify.com/academy/web-scraping-for-beginners/challenge) on building a scraper using CheerioCrawler
-- [Web scraping with Cheerio in 2023](https://blog.apify.com/web-scraping-with-cheerio/)
-- How to [scrape a dynamic page](https://blog.apify.com/what-is-a-dynamic-page/) using Cheerio
-- [TypeScript vs. JavaScript: which to use for web scraping?](https://blog.apify.com/typescript-vs-javascript-crawler/)
-- [Integration with Zapier](https://apify.com/integrations), Make, Google Drive and others
-- [Video guide on getting scraped data using Apify API](https://www.youtube.com/watch?v=ViYYDHSBAKM)
-- A short guide on how to build web scrapers using code templates:
+The scraper extracts the following metadata from Glass.photo:
+- Photo title/description
+- Original page URL
+- Camera model
+- Lens information
+- Focal length
+- Aperture settings
+- ISO value
+- Exposure time
+- Original date and time
+- High-resolution image URL
 
-[web scraper template](https://www.youtube.com/watch?v=u-i-Korzf8w)
+## Usage
 
+1. Set up your environment:
+   ```bash
+   # Create a .env file with your Tana API token
+   echo "TANA_API_TOKEN=your_token_here" > .env
+   ```
 
-## Getting started
+2. Install dependencies:
+   ```bash
+   yarn install
+   ```
 
-For complete information [see this article](https://docs.apify.com/platform/actors/development#build-actor-locally). To run the actor use the following command:
+3. Start the scraper:
+   ```bash
+   yarn start
+   ```
 
-```bash
-apify run
-```
+4. For production use:
+   ```bash
+   yarn build
+   yarn start:prod
+   ```
 
-## Deploy to Apify
+## Configuration
 
-### Connect Git repository to Apify
+- The project uses Tana API with pre-configured attribute IDs for proper data structure
+- Photo metadata is organized using a Tana supertag
+- Environment variable `TANA_API_TOKEN` is required for API authentication
+- The input schema accepts an array of Glass.photo URLs to process
 
-If you've created a Git repository for the project, you can easily connect to Apify:
+## Development
 
-1. Go to [Actor creation page](https://console.apify.com/actors/new)
-2. Click on **Link Git Repository** button
+- Run in development mode:
+  ```bash
+  yarn start:dev
+  ```
 
-### Push project on your local machine to Apify
+- Lint the code:
+  ```bash
+  yarn lint
+  ```
 
-You can also deploy the project on your local machine to Apify without the need for the Git repository.
+- Fix linting issues:
+  ```bash
+  yarn lint:fix
+  ```
 
-1. Log in to Apify. You will need to provide your [Apify API Token](https://console.apify.com/account/integrations) to complete this action.
+## Security Notes
 
-    ```bash
-    apify login
-    ```
+- API tokens are stored in environment variables, not committed to the repository
+- .env files are ignored in .gitignore for security
 
-2. Deploy your Actor. This command will deploy and build the Actor on the Apify Platform. You can find your newly created Actor under [Actors -> My Actors](https://console.apify.com/actors?tab=my).
+## Technical Documentation
 
-    ```bash
-    apify push
-    ```
-
-## Documentation reference
-
-To learn more about Apify and Actors, take a look at the following resources:
-
-- [Apify SDK for JavaScript documentation](https://docs.apify.com/sdk/js)
-- [Apify SDK for Python documentation](https://docs.apify.com/sdk/python)
-- [Apify Platform documentation](https://docs.apify.com/platform)
-- [Join our developer community on Discord](https://discord.com/invite/jyEM2PRvMU)
+The application flow:
+1. Loads configuration and environment variables
+2. Initializes the Actor framework
+3. Creates a CheerioCrawler instance that visits each provided Glass.photo URL
+4. Extracts photo metadata from Next.js data embedded in the page
+5. Transforms and formats this data for Tana API
+6. Sends the structured data to Tana workspace
+7. Downloads and saves the highest resolution image available locally
+8. Also stores the extracted data in the Actor's dataset as backup
