@@ -37,6 +37,13 @@ interface PhotoData {
     largestImageUrl: string;
 }
 
+// Add this helper function
+const sanitizeName = (name: string): string => {
+    return (name || 'Untitled Photo')
+        .replace(/[\r\n]+/g, ' ') // Replace newlines with spaces
+        .trim();
+};
+
 const sendToTana = async (photoData: PhotoData) => {
     console.log('Starting sendToTana...'); // Debug log
 
@@ -48,13 +55,10 @@ const sendToTana = async (photoData: PhotoData) => {
     // Format date to YYYY-MM-DD
     const formattedDate = photoData.dateOriginal.split('T')[0];
 
-    // Prepare the payload for Tana
     const payload = {
         nodes: [{
-            name: photoData.title || 'Untitled Photo',
-            // description: `Photo taken with ${photoData.camera}`,
-            // Assuming you've created a "Photo" supertag in Tana with this ID
-            supertags: [{ id: 'HuQZmkmcbG0N' }],  // This is your photo supertag ID
+            name: sanitizeName(photoData.title),
+            supertags: [{ id: 'HuQZmkmcbG0N' }],
             children: [
                 {
                     type: 'field',
@@ -125,6 +129,9 @@ const sendToTana = async (photoData: PhotoData) => {
         }]
     };
 
+    // Debug log the payload
+    console.log('Payload being sent to Tana:', JSON.stringify(payload, null, 2));
+
     try {
         console.log('Sending request to Tana...'); // Debug log
         const response = await fetch(TANA_API_ENDPOINT, {
@@ -137,8 +144,14 @@ const sendToTana = async (photoData: PhotoData) => {
         });
 
         if (!response.ok) {
-            console.error('Tana API error:', response.statusText);
-            throw new Error(`Tana API error: ${response.statusText}`);
+            // Get the error details from response
+            const errorText = await response.text();
+            console.error('Tana API error details:', {
+                status: response.status,
+                statusText: response.statusText,
+                errorBody: errorText
+            });
+            throw new Error(`Tana API error: ${response.statusText} - ${errorText}`);
         }
 
         const result = await response.json();
